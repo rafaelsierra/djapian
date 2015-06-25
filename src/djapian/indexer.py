@@ -46,9 +46,9 @@ class Field(object):
             value = xapian.sortable_serialise(field_value)
         elif isinstance(content_type, (models.BooleanField, bool)):
             # Boolean fields are stored as 't' or 'f'
-            value = field_value and 't' or 'f'
+            value = 't' if field_value else 'f'
         elif isinstance(content_type, (models.DateTimeField, datetime.datetime)):
-            # DateTime fields are stored as %Y%m%d%H%M%S (better sorting)
+            # DateTime fields are stored as %Y%m%d%H%M%S (good for sorting)
             value = field_value.strftime('%Y%m%d%H%M%S')
 
         return smart_str(value)

@@ -27,7 +27,7 @@ class Commiter(object):
         class _ConcreteCommiter(cls):
             pass
 
-        prefix = commit_each and 'object' or 'page'
+        prefix = 'object' if commit_each else 'page'
 
         for name in ('begin', 'commit', 'cancel'):
             def make_method(name):
