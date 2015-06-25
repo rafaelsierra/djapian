@@ -62,12 +62,11 @@ def update_changes(verbose, timeout, once, per_page, commit_each, app_models=Non
         for ct in get_content_types(app_models, 'add', 'edit'):
             indexers = get_indexers(ct)
 
-            for page in paginate(
-                            Change.objects.filter(content_type=ct, action__in=('add', 'edit'))\
-                                .select_related('content_type')\
-                                .order_by('object_id'),
-                            per_page
-                        ):# The objects must be sorted by date
+            queryset = Change.objects.filter(content_type=ct, action__in=('add', 'edit'))\
+                .select_related('content_type')\
+                .order_by('object_id')
+
+            for page in paginate(queryset, per_page):
                 commiter.begin_page()
 
                 try:
@@ -93,7 +92,8 @@ def update_changes(verbose, timeout, once, per_page, commit_each, app_models=Non
                     else:
                         commiter.cancel_page()
                     raise
-
+                if verbose:
+                    print 'Done'
                 reset_counter()
 
         for ct in get_content_types(app_models, 'delete'):
